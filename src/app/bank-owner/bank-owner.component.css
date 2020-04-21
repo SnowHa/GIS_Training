@@ -1,0 +1,54 @@
+.loading {
+    margin:auto;
+    align-self: center;
+    display: inline;
+    position: fixed;
+    z-index: 999;
+}
+.main  p,select,option,th,td,div,button{
+    font-family: monospace !important;
+    text-align: center;
+}
+.NoBranches p,select,option,th,td,div,button, input{
+    
+    font-size: 20px ;
+}
+
+select,option,input {
+    border: none;
+    border-bottom: 2px solid black;
+    font-family: monospace !important;
+    text-align: center;
+}
+table{
+    margin: 30px auto;
+    border-spacing: 10px;
+}
+.header p,select,option{
+    font-size: 30px;
+    font-weight: bold;
+}
+.btnHolder {
+    text-align: center;
+}
+.addButton{
+    background-color: rgb(189, 183, 183);
+    color:black;
+    transition-duration: 0.4s;
+    border: none;
+    padding: 10px;
+}
+.addButton:hover {
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+input{
+    width: 100px;
+}
+th,td, td input {
+    width: 100px;
+}
+.error{
+    color: red;
+    text-align: center;
+}

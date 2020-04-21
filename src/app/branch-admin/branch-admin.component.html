@@ -1,0 +1,106 @@
+
+<div *ngIf="loadingBranch || loadingClient">
+        <mat-spinner></mat-spinner>
+    </div> 
+
+<div *ngIf="loadingBranch==false" class="main">
+        <mat-card>
+                <mat-card-header>
+                    <mat-card-title>  
+                        <span class="header">
+                                <p>
+                                    Which branch would you like to view?
+                                    <select (value)='selectedBank.name' (change)="updateBank($event.target.value)">
+                                            <option *ngFor="let bank of banks$ | async" value="{{bank.name}}">{{bank.name}}</option>                
+                                        </select>
+                                    <select (value)='selectedBranch.name' (change)="updateBranch($event.target.value)">
+                                        <option *ngFor="let branch of branches$ | async" value="{{branch.name}}">{{branch.name}}</option>                
+                                    </select>
+                            </p>
+                        </span>
+                        <div *ngIf="(clients$ | async)?.length==0" class="noClients">
+                                        You got no clients suh, but here is the branch info for you:    
+                                        <div> 
+                                            <div>Branch name: {{selectedBranch.name}}</div>
+                                            <div>
+                                                Branch balance: {{selectedBranch.balance}}   
+                                            </div>
+                                            <div *ngIf="addClient==false">
+                                                Number of clients: none. lol.
+                                            </div>
+                                            <div *ngIf="addClient">
+                                                    Number of clientes: one(?)
+                                            </div>
+                                        </div>
+                        </div>          
+                        <div *ngIf="(clients$ | async)?.length>0"> 
+                                        Hello Suh,
+                                        your branches balance is {{this.selectedBranch.balance}}
+                        </div>
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                                <div *ngFor="let err of errors" class="error">
+                                        {{err}}
+                                </div>
+                        </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>       
+            <table *ngIf="((clients$ | async)?.length>0 && loadingClient==false) || addClient" class="ui celled table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First name</th>
+                    <th>Last Name</th>
+                    <th>Date of Birth</th>
+                    <th>Balance</th> 
+                    <th>Type</th> 
+                    <th>Branch Name</th> 
+                    </tr>
+                </thead>
+                <tr *ngFor="let client of clients$ | async">
+                    <td>{{client.id}}</td>
+                    <td>{{client.firstName}}</td>
+                    <td>{{client.lastName}}</td>
+                    <td>{{client.dateOfBirth}}</td>
+                    <td>{{client.balance}}</td>
+                    <td>{{client.type}}</td>
+                    <td>{{client.branch}}</td>
+                </tr>
+                <tr *ngIf="addClient" [formGroup]="newClient" >
+                        <td>
+                            <input type="number" formControlName='id'>
+                        </td>
+                        <td>
+                            <input type="text" formControlName='firstName' onkeypress="return (event.charCode > 64 && event.charCode < 91 ) || (event.charCode > 96 && event.charCode<123) ">
+                        </td>
+                        <td>
+                            <input type="text" formControlName='lastName' onkeypress="return (event.charCode > 64 && event.charCode < 91 ) || (event.charCode > 96 && event.charCode<123) ">
+                        </td>
+                        <td>
+                            <input type="date" formControlName='dateOfBirth' value="1999-01-08">
+                        </td>
+                        <td>
+                            0
+                        </td>
+                        <td>
+                            <select formControlName='type'>
+                                    <option value="Business">Business</option>                
+                                    <option value="Private">Private</option>                
+                            </select>
+                        </td>
+                        <td>
+                            {{selectedBranch.name}}
+                        </td>
+                </tr>
+            </table>
+            <div class="btnHolder">
+                <button *ngIf="addClient" type="submit" class="addButton" (click)="postClient()">
+                        +Post Client
+                </button>
+                <button *ngIf="addClient==false" class="addButton" (click)="addClient=true;">
+                    +Add Client
+                </button>
+            </div>        
+         </mat-card-content>
+        </mat-card>
+</div>

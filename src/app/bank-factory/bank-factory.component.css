@@ -1,0 +1,61 @@
+.content {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 1em 3em;
+    background: #eee;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.5em;
+} 
+.headers{
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 25px;
+}
+.field {
+    display: flex;
+    width: stretch;
+    padding-bottom: 20px;
+    margin-right: 0% !important;
+}
+form h2 {
+    text-align: center;
+}
+.field label{
+    float:left;
+    text-align: right;
+    margin-right: 15px;
+    width: 150px;   
+    padding: 15px;
+    padding-left: 3px;
+}
+input, select{
+    font-size : 1.4em/1.5em;
+    display: inline-block;
+    border: none;
+    right: 0%;
+    width: inherit;
+    padding: 15px;
+    height: fit-content;
+}
+.btnHolder {
+    text-align: center;
+}
+.submitButton{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color:black;
+    font-weight: bold;
+    transition-duration: 0.4s;
+    border: none;
+    padding: 10px;
+}
+.submitButton:hover {
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+.error{
+    color: red;
+    text-align: center;
+}

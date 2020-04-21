@@ -1,0 +1,52 @@
+.loading {
+    margin: 150px auto;
+    font-size: 90px !important;
+}
+.main  p,select,option,th,td,div,button{
+    font-family: monospace !important;
+    text-align: center;
+}
+.NoClients p,select,option,th,td,div,button, input{
+    
+    font-size: 20px ;
+}
+
+select,option,input {
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid black;
+    font-family: monospace !important;
+    text-align: center;
+}
+table{
+    margin: 30px auto;
+    border-spacing: 10px;
+}
+.header p, .header select,.header option{
+    font-size: 30px;
+    font-weight: bold;
+}
+.btnHolder {
+    text-align: center;
+}
+.addButton{
+    background-color: rgb(189, 183, 183);
+    color:black;
+    transition-duration: 0.4s;
+    border: none;
+    padding: 10px;
+}
+.addButton:hover {
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+input{
+    width: 100px;
+}
+th,td, td input {
+    width: min 100px;
+}
+.error{
+    color: red;
+    text-align: center;
+}

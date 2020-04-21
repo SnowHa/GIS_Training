@@ -1,0 +1,167 @@
+.content {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 1em 3em;
+    background: #eee;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.5em;
+    margin-top: 5em;
+} 
+.headers, input{
+    text-align: center;
+    margin-bottom: 16px;
+
+}
+.field {
+    display: flex;
+    width: fill-available;
+    padding-bottom: 20px;
+    margin-right: 0% !important;
+}
+form h2 {
+    text-align: center;
+}
+.field label{
+    float:left;
+    text-align: right;
+    margin-right: 15px;
+    width: 150px;
+    padding: 15px;
+    padding-left: 3px;
+}
+input{
+    font-size : 1.4em/1.5em;
+    display: inline-block;
+    margin: auto;
+    border: none;
+    right: 0%;
+    width: inherit;
+    padding: 15px;
+    height: fit-content;
+}
+.btnHolder {
+    text-align: center;
+}
+button{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color:black;
+    font-weight: bold;
+    transition-duration: 0.4s;
+    border: none;
+    padding: 10px;
+}
+button:hover {
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+.Details {
+    text-align: center;
+}
+.row {
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+svg.material-icons {
+    height: 24px;
+    width: auto;
+  }
+  
+/* Responsive Styles */
+  @media screen and (max-width: 767px) {
+
+    .card-container > *:not(.circle-link) ,
+    .terminal {
+      width: 100%;
+    }
+
+    .card:not(.highlight-card) {
+      height: 16px;
+      margin: 8px 0;
+    }
+
+    .card.highlight-card span {
+      margin-left: 72px;
+    }
+
+    svg#rocket-smoke {
+      right: 120px;
+      transform: rotate(-5deg);
+    }
+  }
+
+  @media screen and (max-width: 575px) {
+    svg#rocket-smoke {
+      display: none;
+      visibility: hidden;
+    }
+  }
+  svg.material-icons:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  .card svg.material-icons path {
+    fill: #888;
+  }
+
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .card {
+    border-radius: 4px;
+    border: 1px solid #eee;
+    background-color: #fafafa;
+    height: 40px;
+    width: 200px;
+    margin: 0 8px 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    line-height: 24px;
+  }
+
+  .card-container .card:not(:last-child) {
+    margin-right: 0;
+  }
+
+  .card.card-small {
+    height: 16px;
+    width: 168px;
+  }
+
+  .card-container .card:not(.highlight-card) {
+    cursor: pointer;
+  }
+
+  .card-container .card:not(.highlight-card):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(black, 0.35);
+  }
+
+  .card-container .card:not(.highlight-card):hover .material-icons path {
+    fill: rgb(105, 103, 103);
+  }
+
+  .card.highlight-card {
+    background-color: #1976d2;
+    color: white;
+    font-weight: 600;
+    border: none;
+    width: auto;
+    min-width: 30%;
+    position: relative;
+  }
+
+  .card.card.highlight-card span {
+    margin-left: 60px;
+  }

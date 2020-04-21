@@ -1,0 +1,28 @@
+<div class="headers">
+        <h1>Welcome GIS Member!</h1>          
+</div>
+<div class="content" >
+    <div *ngIf="complete==false">
+        <form [formGroup]= "myForm" (ngSubmit)="SubmitBank()" class="form" >  
+            <h2>Create New Bank</h2>
+            <div class="field">  
+                <label for="name">Bank name</label> 
+                <input type="text" id="name" placeholder="Bank da Bank" formControlName="name">  
+            </div>
+            <div class="field">  
+                <label for="total_balance">Bank balance</label> 
+                <input type="number" id="total_balance" min="0" placeholder="1000000" formControlName="total_balance">  
+            </div>
+            <div *ngFor="let err of errors" class="error">
+                {{err}}
+            </div>
+            <div class="btnHolder"> 
+                <button type="submit" class="submitButton">Submit</button>
+            </div>
+        </form> 
+    </div>    
+    <div *ngFor="let c of content">
+
+        {{c}}
+    </div>
+</div>

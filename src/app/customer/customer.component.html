@@ -1,0 +1,71 @@
+<div *ngIf="selection!=='Login'">
+        <div class="card-container">
+                <div *ngFor="let sel of selectionOptions | keyvalue" class="card card-small" [style.border-bottom]="sel.value" (click)="changeSelection(sel.key)" tabindex="0">
+                        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                      <span>{{sel.key}} </span>
+
+                </div>
+          
+        </div>
+</div>
+<div [ngSwitch]="true" class="content">
+    <div *ngSwitchCase="selection==='Login'" >
+            <form [formGroup]= "loginForm" (ngSubmit)="login()" class="form">  
+                    <h2 class="headers">Enter your id</h2>
+                    <mat-form-field>
+                            <mat-label>
+                                ID Number
+                            </mat-label>
+                            <input type="number" formControlName="Id" matInput>
+                            <mat-hint align="start" color="red" *ngIf="inCorrectId">
+                                User Id doesn't exist.
+                            </mat-hint>
+                    </mat-form-field>
+                    <div class="btnHolder"> 
+                                <button mat-button [disabled]="!loginForm.valid">Submit</button>
+                    </div>
+            </form> 
+    </div>
+    <div *ngSwitchCase="selection==='Details'" class="Details">
+        <div class="row">
+            Name: {{selectedClient.firstName}} {{selectedClient.lastName}}
+        </div>
+        <div class="row">
+            ID: {{selectedClient.id}}
+        </div>
+        <div class="row">
+            Date: {{selectedClient.dateOfBirth}}
+        </div>
+        <div class="row">
+            Balance: {{selectedClient.balance}}
+        </div>
+        <div class="row">
+            Type: {{selectedClient.type}}
+        </div>
+        <div class="row">
+            Branch name: {{selectedClient.branch}}
+        </div>
+        <div class="row">
+            Bank name: {{selectedClientsBank}}
+        </div>
+    </div> 
+    <form [formGroup]= "addSubForm" (ngSubmit)="change()" class="form" *ngSwitchCase="selection==='Deposit' || selection=== 'Withdraw' " >  
+            <div class="headers">
+                <h2>
+                        How much would you like to {{selection}}?
+                </h2>
+            </div>
+            <mat-form-field>
+                    <mat-label>
+                        current balance: {{selectedClient.balance}}
+                    </mat-label>
+                    <input type="number" formControlName="amount" matInput>
+            </mat-form-field>
+            <div class="btnHolder"> 
+                        <button mat-button [disabled]="!addSubForm.valid">Submit</button>
+            </div>
+    </form> 
+</div>
+        <div *ngIf="loading">
+            <mat-spinner></mat-spinner>
+        </div> 
