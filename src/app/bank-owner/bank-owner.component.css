@@ -37,6 +37,7 @@ table{
     transition-duration: 0.4s;
     border: none;
     padding: 10px;
+    margin: 4px;
 }
 .addButton:hover {
     background-color: rgb(49, 49, 49);

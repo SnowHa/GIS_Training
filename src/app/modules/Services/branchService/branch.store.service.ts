@@ -26,6 +26,29 @@ export class BranchStoreService extends Store<BranchData> {
     constructor(private branchService: BranchService) {
         super("branches",INITIAL_BRANCH_DATA);
     }
+
+    public quickAllFetch() {
+      const branches = new Array<Branch>();
+      return new Promise(resolve =>
+        {
+          const branches = new Array<Branch>();
+            this.branchService.getBranches().subscribe((res)=>{
+              if(res) {
+                for(let b of JSON.parse(res))
+                {     
+                  branches.push(new Branch(b));
+                }
+              }
+            },
+            error => {
+              console.log("ERROR IN LOADING BRANCHES")
+            },
+            ()=> {
+              resolve(branches);
+            });    
+       });
+    }
+
     public loadBranch(resetSelected:boolean=true,name:string= "" ) {
           this.setState('[branches] LOADING',s => ({ ...s , branchesLoaded: false }));
           const branches = new Array<Branch>();
@@ -55,7 +78,6 @@ export class BranchStoreService extends Store<BranchData> {
 
               }
               else {
-
                 this.branchService.getBranches().subscribe((res)=>{
                   if(res) {
                     for(let b of JSON.parse(res))

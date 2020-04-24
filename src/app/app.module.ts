@@ -21,7 +21,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatTabsModule} from '@angular/material/tabs';
 import { MapComponent } from './map/map.component';
+import { MapDialogComponent } from './map-dialog/map-dialog.component';
+import { BankOwnerFullComponent } from './bank-owner-full/bank-owner-full.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +33,9 @@ import { MapComponent } from './map/map.component';
     BankOwnerComponent,
     BranchAdminComponent,
     CustomerComponent,
-    MapComponent
+    MapComponent,
+    MapDialogComponent,
+    BankOwnerFullComponent
   ],
   imports: [
     MatButtonModule,
@@ -40,7 +46,8 @@ import { MapComponent } from './map/map.component';
     MatCheckboxModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
-   // MatTabsModule,
+    MatDialogModule,
+    MatTabsModule,
    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,

@@ -1,88 +1,92 @@
 
-<div class="main">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>      
-                <span class="header">
-                    <p>
-                        Which bank would you like to view?
-                        <select (value)='selectedBank.name' (change)="submit($event.target.value)">
-                            <option *ngFor="let bank of banks$ | async" value="{{bank.name}}">{{bank.name}}</option>                
-                        </select>
-                    </p>
-                </span>
-                <div *ngIf="(branches$ | async)?.length==0" class="noBranches">
-                    You got no branches suh, but here is the bank info for you:    
-                    <div> 
-                        <div>Bank name: {{selectedBank.name}}</div>
-                        <div>
-                            Bank balance: {{selectedBank.total_balance}}   
+        <div class="main">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>      
+                        <span class="header">
+                            <p>
+                                Which bank would you like to view?
+                                <select (value)='selectedBank.name' (change)="submit($event.target.value)">
+                                    <option *ngFor="let bank of banks$ | async" value="{{bank.name}}">{{bank.name}}</option>                
+                                </select>
+                            </p>
+                        </span>
+                        <div *ngIf="(branches$ | async)?.length==0" class="noBranches">
+                            You got no branches suh, but here is the bank info for you:    
+                            <div> 
+                                <div>Bank name: {{selectedBank.name}}</div>
+                                <div>
+                                    Bank balance: {{selectedBank.total_balance}}   
+                                </div>
+                                <div *ngIf="addBranch==false">
+                                    Number of branches: none. lol.
+                                </div>
+                                <div *ngIf="addBranch">
+                                    Number of branches: one(?)
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div *ngIf="addBranch==false">
-                            Number of branches: none. lol.
+                        <div *ngIf="(branches$ | async)?.length>0"> 
+                            Hello Suh,
+                            your current total balance is {{this.selectedBank.total_balance}}
                         </div>
-                        <div *ngIf="addBranch">
-                            Number of branches: one(?)
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        <div *ngFor="let err of errors" class="error">
+                            {{err}}
                         </div>
-                    </div>
-                    
-                </div>
-                <div *ngIf="(branches$ | async)?.length>0"> 
-                    Hello Suh,
-                    your current total balance is {{this.selectedBank.total_balance}}
-                </div>
-            </mat-card-title>
-            <mat-card-subtitle>
-                <div *ngFor="let err of errors" class="error">
-                    {{err}}
-                </div>
-            </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-                <div *ngIf="loadingBank || loadingBranch" class="loading"> <mat-spinner></mat-spinner>
-                </div>  
-                <table *ngIf="loadingBranch==false && ((branches$ | async)?.length>0 || addBranch )" class="ui celled table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Balance</th>
-                            <th>X</th> 
-                            <th>Y</th> 
-                            <th>Bank Name</th> 
-                            </tr>
-                        </thead>
-                        <tr *ngFor="let branch of branches$ | async">
-                            <td>{{ branch.name }}</td>
-                            <td>{{ branch.balance }}</td>
-                            <td>{{ branch.x }}</td>
-                            <td>{{ branch.y }}</td>
-                            <td>{{ branch.bank }}</td>
-                        </tr>
-                        <tr *ngIf="addBranch" [formGroup]="newBranch" >
-                            <td>
-                                <input type="text" [(formControl)]='newBranch.controls["name"]'>
-                            </td>
-                            <td>
-                                0
-                            </td>
-                            <td>
-                                <input type="number" [(formControl)]='newBranch.controls["x"]'>
-                            </td>
-                                <input type="number" [(formControl)]='newBranch.controls["y"]'>
-                            <td>
-                                {{selectedBank.name}}
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="btnHolder">
-                        <button *ngIf="addBranch" type="submit" class="addButton" (click)="postBranch()">
-                                +Post Branch
-                        </button>
-                        <button *ngIf="addBranch==false" class="addButton" (click)="addBranch=true">
-                            +Add Branch
-                        </button>
-                    </div>       
-        </mat-card-content>
-    </mat-card>
-
-</div>
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                        <div *ngIf="loadingBank || loadingBranch" class="loading"> <mat-spinner></mat-spinner>
+                        </div>  
+                        <table *ngIf="loadingBranch==false && ((branches$ | async)?.length>0 || addBranch )" class="ui celled table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Balance</th>
+                                    <th>X</th> 
+                                    <th>Y</th> 
+                                    <th>Bank Name</th> 
+                                    </tr>
+                                </thead>
+                                <tr *ngFor="let branch of branches$ | async">
+                                    <td>{{ branch.name }}</td>
+                                    <td>{{ branch.balance }}</td>
+                                    <td>{{ branch.x }}</td>
+                                    <td>{{ branch.y }}</td>
+                                    <td>{{ branch.bank }}</td>
+                                </tr>
+                                <tr *ngIf="addBranch" [formGroup]="newBranch" >
+                                    <td>
+                                        <input type="text" [(formControl)]='newBranch.controls["name"]'>
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        <input type="number" [(formControl)]='newBranch.controls["x"]' #viewX>
+                                    </td>
+                                        <input type="number" [(formControl)]='newBranch.controls["y"]' #viewY>
+                                    <td>
+                                        {{selectedBank.name}}
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="btnHolder">
+                                <button *ngIf="addBranch" type="submit" class="addButton" (click)="postBranch()">
+                                        +Post Branch
+                                </button>
+                                <button *ngIf="addBranch" class="addButton" (click)="displayMap()">
+                                    Display Map
+                                </button>
+                                <button *ngIf="addBranch==false" class="addButton" (click)="addBranch=true">
+                                    +Add Branch
+                                </button>
+                            </div>       
+                </mat-card-content>
+            </mat-card>
+        
+        </div>   
+    
