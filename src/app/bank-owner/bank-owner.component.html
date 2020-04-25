@@ -66,9 +66,9 @@
                                         0
                                     </td>
                                     <td>
-                                        <input type="number" [(formControl)]='newBranch.controls["x"]' #viewX>
+                                        <input type="number" (click)="displayMap()" [(formControl)]='newBranch.controls["x"]' [readonly]="true" #viewX>
                                     </td>
-                                        <input type="number" [(formControl)]='newBranch.controls["y"]' #viewY>
+                                        <input type="number" (click)="displayMap()" [(formControl)]='newBranch.controls["y"]' [readonly]="true" #viewY>
                                     <td>
                                         {{selectedBank.name}}
                                     </td>
@@ -79,7 +79,7 @@
                                         +Post Branch
                                 </button>
                                 <button *ngIf="addBranch" class="addButton" (click)="displayMap()">
-                                    Display Map
+                                    Choose location
                                 </button>
                                 <button *ngIf="addBranch==false" class="addButton" (click)="addBranch=true">
                                     +Add Branch

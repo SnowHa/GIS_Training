@@ -27,5 +27,26 @@ export class BranchService {
   return this.http.post(this.branchUrl+ "Create"+bodyString,"") // ...using post request
           ;
   }
+  getAll() {
+    const branches = new Array<Branch>();
+    return new Promise(resolve =>
+      {
+        const branches = new Array<Branch>();
+          this.getBranches().subscribe((res)=>{
+            if(res) {
+              for(let b of JSON.parse(res))
+              {     
+                branches.push(new Branch(b));
+              }
+            }
+          },
+          error => {
+            console.log("ERROR IN LOADING BRANCHES")
+          },
+          ()=> {
+            resolve(branches);
+          });    
+     });
+}
 
 }
