@@ -4,7 +4,6 @@ import { map, take } from 'rxjs/operators';
 import { Store } from '../../Store/store';
 import { Client } from './client-model';
 import { ClientService } from './client.service';
-import { promise } from 'protractor';
 
 export class ClientData {
     clients: Client[];
@@ -30,50 +29,34 @@ export class ClientStoreService extends Store<ClientData> {
   getClientsObservable(): Observable<Client[]> {
         return this.select(state => state.clients);
   }
-  public getClientById(id: number) :Promise<Client>{
+  public getClientById(id: number){
       this.setState('[clients] LOADING',s => ({ ...s , clientsLoaded: false }));
-      return new Promise(resolve =>
-        {
-          var client = new Client();
-          this.clientService.getClientsById(id).subscribe((res)=>{
+      return this.clientService.getClientsById(id).pipe(map((res)=>{
                 if(res) {
                 let b =JSON.parse(res);  
-                client=new Client(b[0]);
+                return new Client(b[0]);
             }
             else{
-              client=null;
+              return null;
             }
-          },
-          error => {
-           console.log("ERROR IN FIND CLIENT")
-          },
-          ()=> {
-        
-            resolve(client);
-          });    
-          });
-    }
-    public loadClientsByBranch(name: string) : Promise<Array<Client>>{
-        this.setState('[clients] LOADING',s => ({ ...s , clientsLoaded: false }));
-        return new Promise(resolve =>
-          {
-            const clients = new Array<Client>();
-            this.clientService.getClientsByBranch(name).subscribe((res)=>{
-                if(res) {
-                  for(let b of JSON.parse(res))
-                  {     
-                    clients.push(new Client(b));
-                  }
-                }
-            },
-            error => {
-             console.log("ERROR IN GETTING CLIENT BY BRANCH")
-            },
-            ()=> {
-              this.updateState('[clients] LOAD', { clients: clients, clientLoaded: true});
-              resolve(clients);
-            });    
-            });
+                  }));
+    } 
+    public loadClientsByBranch(name: string){
+      this.setState('[clients] LOADING',s => ({ ...s , clientsLoaded: false }));
+      const clients = new Array<Client>();
+      console.log(name);
+      this.clientService.getClientsByBranch(name).subscribe((res)=>{
+        console.log("RES");
+        console.log(res);
+        if(res){
+          console.log("GG");
+          for(let b of JSON.parse(res))
+          {     
+            clients.push(new Client(b));
+          }
+        }
+        this.setState('[clients] LOAD', s=>({ ...s,clients: clients, clientLoaded: true}));
+      });
     }
     public isLoading(): Observable<boolean> {
       return this.select(state => state.clientLoaded);

@@ -19,6 +19,7 @@ export class BranchAdminComponent implements OnInit, OnDestroy {
     this.subscription.forEach(sub=> sub.unsubscribe());
   }
   subscription: Subscription[]= new Array<Subscription>();
+  tempSubscription : Subscription[] = new Array<Subscription>();
   loadingBranch: boolean;
   loadingClient: boolean;
   errors: Array<string> = new Array<string>();
@@ -26,7 +27,6 @@ export class BranchAdminComponent implements OnInit, OnDestroy {
   banks$: Observable<Array<Bank>>
   clients$: Observable<Array<Client>>;
   branches$: Observable<Array<Branch>>;
-
   selectedBranch: Branch= new Branch();
   selectedBank: Bank=new Bank();
   //For adding a new client
@@ -73,7 +73,7 @@ export class BranchAdminComponent implements OnInit, OnDestroy {
 
   postClient(){
     if(this.errorControl()){
-      this.clientStoreService.getClientById(this.newClient.value.id).then((res)=>{
+      this.tempSubscription.push(this.clientStoreService.getClientById(this.newClient.value.id).subscribe((res)=>{
         if(res){
           this.errors.push("the ID already exists");
           this.cd.detectChanges();
@@ -85,7 +85,8 @@ export class BranchAdminComponent implements OnInit, OnDestroy {
           this.cd.markForCheck();
           this.newClient= this.fb.group(new Client());
         }
-      });
+        this.tempSubscription.pop().unsubscribe();
+      }));
     }
   }
   

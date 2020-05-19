@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Bank } from '../modules/Services/bankService/bank-model';
 import { BankStoreService } from '../modules/Services/bankService/bank.store.service';
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-bank-factory',
   templateUrl: './bank-factory.component.html',
@@ -26,14 +27,16 @@ export class BankFactoryComponent implements OnInit {
     }
     let newBank= new Bank({Name: this.myForm.controls['name'].value,
          Total_balance: this.myForm.controls['total_balance'].value});
-    this.bankStoreService.DoesBankExist(newBank.name).then((res)=>
+    this.bankStoreService.DoesBankExist(newBank.name).toPromise().then((res)=>
     {
+      console.log(res);
       if(res){
         this.errors.push("the name already exists");
         this.cd.detectChanges();
 
       }
       else{
+        console.log("SDSD");
         console.log(newBank);
         this.bankStoreService.addBank(newBank);
         this.complete=true;
@@ -42,7 +45,7 @@ export class BankFactoryComponent implements OnInit {
         this.content.push('to create your first branch, click on `Bank owner` on the menu.')
         this.cd.detectChanges();
       }
-    });
+    }); //observable.pipe(take(1)).subscribe(()=>{...})
   }
   ngOnInit() {
   }

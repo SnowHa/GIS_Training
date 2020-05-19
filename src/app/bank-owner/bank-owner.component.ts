@@ -8,6 +8,7 @@ import { Observable, Subscription } from 'rxjs';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { MapComponent } from '../map/map.component';
 import { MapDialogComponent } from '../map-dialog/map-dialog.component';
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-bank-owner',
   templateUrl: './bank-owner.component.html',
@@ -27,7 +28,7 @@ export class BankOwnerComponent implements OnInit, OnDestroy {
   errors: string[]=new Array<string>();
   banks$: Observable<Array<Bank>>;
   branches$ : Observable<Array<Branch>>;
- 
+  tempSubscription: Subscription;
   //What the checkBox Selects. Default value is Banks[0]/
   selectedBank: Bank= new Bank();
   
@@ -48,6 +49,7 @@ export class BankOwnerComponent implements OnInit, OnDestroy {
       if(bank.name!=""){
         this.selectedBank=bank;
         this.branchStoreService.loadBranch(false,bank.name);
+        
       }
 
      });   
@@ -83,7 +85,7 @@ export class BankOwnerComponent implements OnInit, OnDestroy {
   }
   postBranch(){
     if(this.errorControl()){
-      this.branchStoreService.getBranchByName(this.newBranch.value.name).then(res=>{
+      this.subscrption= this.branchStoreService.getBranchByName(this.newBranch.value.name).pipe(take(1)).subscribe(res=>{
         if(res){
           //already exists
           this.errors.push("the name already exists");

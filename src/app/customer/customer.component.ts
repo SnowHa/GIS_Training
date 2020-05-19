@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Client } from '../modules/Services/clientService/client-model';
 import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { BranchStoreService } from '../modules/Services/branchService/branch.store.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customer',
@@ -47,12 +48,12 @@ export class CustomerComponent implements OnInit {
   }
   login(){
    /// console.log("value is "+ value);
-    this.clientStoreService.getClientById(this.loginForm.controls.Id.value).then(res=>{
+    this.clientStoreService.getClientById(this.loginForm.controls.Id.value).pipe(take(1)).subscribe(res=>{
         if(res){
           this.selectedClient=new Client(res);
           this.cd.markForCheck();
           this.inCorrectId=false;
-          this.branchStoreService.getBranchByName(res.branch).then(res1=>{
+          this.branchStoreService.getBranchByName(res.branch).pipe(take(1)).subscribe(res1=>{
             console.log(res1.bank);
             this.selectedClientsBank=res1.bank;
             this.cd.detectChanges();

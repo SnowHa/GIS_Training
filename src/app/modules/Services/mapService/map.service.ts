@@ -1,45 +1,126 @@
-import {Injectable, ElementRef} from '@angular/core';
-import esriConfig from 'esri/config';
-import { Branch } from './branchService/branch-model';
-import { FormGroup } from '@angular/forms';
+import { Injectable, ElementRef } from '@angular/core';
 import Map from 'esri/Map';
 import Graphic from 'esri/Graphic';
 import MapView from 'esri/views/MapView';
-import FeatureLayer from 'esri/layers/FeatureLayer';
-//import  from 'arcgis-js-api'
-@Injectable({ 
+import { Branch } from '../branchService/branch-model';
+import { Observable, observable, BehaviorSubject } from 'rxjs';
+import { Point, SpatialReference } from 'esri/geometry';
+import { SimpleMarkerSymbol, SimpleLineSymbol } from 'esri/symbols';
+import GraphicsLayer from 'esri/layers/GraphicsLayer';
+import LayerView from 'esri/views/layers/LayerView';
+
+@Injectable({
   providedIn: 'root'
 })
-export class EsriService {
+export class MapService {
+  map: Map;
+  mapView: MapView;
+  selectedPoint: BehaviorSubject<Point>;
   constructor() {
-    const DEFAULT_WORKER_URL = "https://js.arcgis.com/4.15/";
-    (esriConfig.workers as any).loaderUrl= `${DEFAULT_WORKER_URL}dojo/dojo-lite.js`;
-    esriConfig.workers.loaderConfig = {
-      baseUrl: `${DEFAULT_WORKER_URL}`,
-      packages: [
-        {name: "esri", location: DEFAULT_WORKER_URL+"esri"},
-        {name: "dojo", location: DEFAULT_WORKER_URL+"dojo"},
-        {name: "dojox", location: DEFAULT_WORKER_URL+"dojox"},
-        {name: "dijit", location: DEFAULT_WORKER_URL+"dijit"},
-        {name: "dstore", location: DEFAULT_WORKER_URL+"dstore"},
-        {name: "moment", location: DEFAULT_WORKER_URL+"moment"},
-        {name: "@dojo", location: DEFAULT_WORKER_URL+"@dojo"},
-        {name: "cldrjs", location: DEFAULT_WORKER_URL+"cldrjs", main: "dist/cldr"},
-        {name: "globalize", location: DEFAULT_WORKER_URL+"globalize", main: "dist/globalize"},
-        {name: "maquette", location: DEFAULT_WORKER_URL+"maquette", main: "dist/maquette.umd"},
-        {name: "maquette-css-transitions", location: DEFAULT_WORKER_URL+"maquette-css-transitions", main: "dist/maquette-css-transitions.umd"},
-        {name: "maquette-jsx", location: DEFAULT_WORKER_URL+"maquette-jsx", main: "dist/maquette-jsx.umd"},
-        {name: "tslib", location: DEFAULT_WORKER_URL+"tslib", main: "tslib"},
-      ]
-    } as any;
+    this.map = new Map({
+      basemap: 'gray'    
+    });
   }
-/*
-   initializeMap(branches : Branch[], mapContainer: ElementRef, find:boolean,
+  convertToGraphics(branches: Branch[]): Graphic[] {
+    let allbanks = new Array<string>();
+    var graphics = [];
+
+    branches.forEach(b => {
+      if (!allbanks.includes(b.bank)) {
+        allbanks.push(b.bank);
+      }
+    });
+    let id = 0;
+    allbanks.forEach(bankName => {
+      let currColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+      branches.filter(x => x.bank == bankName).forEach((singleB) => {
+        graphics.push(new Graphic({
+          attributes:{
+            ObjectId: ++id,
+            name: singleB.name,
+            balance: singleB.balance,
+            bank: singleB.bank
+          },
+          geometry: new Point({
+            x: singleB.x,
+            y: singleB.y,
+            spatialReference: new SpatialReference({wkid:102100}) 
+          }),
+          symbol: new SimpleMarkerSymbol({ // autocasts as new SimpleMarkerSymbol()
+          color: currColor,
+          size: 12,
+          outline: { // autocasts as new SimpleLineSymbol()
+            width: 0.5,
+            color: "darkblue"
+          }})
+        }));
+      });
+    });
+    return graphics;
+  }
+  addClick() {
+    this.selectedPoint = new BehaviorSubject<Point>(new Point());
+    this.mapView.on("click", (evt) => {
+      console.log("X: " + evt.mapPoint.x.toString() + ", Y: " + evt.mapPoint.y.toString());
+      var oldGraphic = this.mapView.graphics.getItemAt(0);
+      var simM = new SimpleMarkerSymbol({
+        color: 'blue',
+        size: 12,
+        outline: {
+          width: 0.5,
+          color: 'darkblue'
+        }
+      });
+      console.log(evt.mapPoint.spatialReference);
+      var graphic = new Graphic({
+        geometry: evt.mapPoint,
+        symbol: simM
+      });
+      this.mapView.graphics.remove(oldGraphic);
+      this.mapView.graphics.add(graphic as Graphic);
+      this.selectedPoint.next(evt.mapPoint);
+    });
+    return this.selectedPoint;
+  }
+  addGraphicLayerFromBranch(branches: Branch[]) {
+    let graphicArr= this.convertToGraphics(branches);
+    console.log(graphicArr);
+    let graphicsLayer = new GraphicsLayer({
+      graphics: graphicArr
+    });
+    this.map.layers.add(graphicsLayer);
+    //this.mapView.layerViews.add(new LayerView())
+  }
+  initializeMapView(mapContainer: ElementRef) {
+    try {
+      // Create a MapView instance (for 2D viewing) and reference the map instance
+      //when the map is clicked create a buffer around the click point of the specified distance.
+      let viewProperties = {
+        map: this.map,
+        center: [35, 32],
+        zoom: 10,
+        //spatialReference: new SpatialReference({wkid:4326}),
+        container: mapContainer.nativeElement,
+        popup: {
+          dockEnabled: true,
+          dockOptions: {
+            position: "top-right",
+            breakpoint: false
+          }
+        }
+      };
+      this.mapView = new MapView(viewProperties);
+    } catch (error) {
+      console.log("Esri: ", error);
+    }
+  }
+}
+/*initializeMap(branches : Branch[], mapContainer: ElementRef, find:boolean,
     xref: ElementRef=null, yref: ElementRef=null) {
     try {
       // Configure the Map
       let allbanks=new Array<string>();
-      
+
       branches.forEach(b => {
         if(!allbanks.includes(b.bank))
         {
@@ -52,7 +133,7 @@ export class EsriService {
             });
             // Create a MapView instance (for 2D viewing) and reference the map instance
             //when the map is clicked create a buffer around the click point of the specified distance.
-            
+
             var viewProperties = {
               map: map,
               center: [ 35, 32 ],
@@ -128,8 +209,8 @@ export class EsriService {
                   wkid: 4326
                 },
                 outFields: ["*"],
-                popupTemplate:   
-                {   
+                popupTemplate:
+                {
                   title: "Selected Branch",
                   content: [{
                     type: "fields",
@@ -150,10 +231,10 @@ export class EsriService {
                         visible: true
                       }
                     ]
-                  }] 
+                  }]
               },
                 geometryType: "point"
-              });    
+              });
               map.layers.add(featureLayer);
             });
             var view = new MapView(viewProperties);
@@ -184,5 +265,4 @@ export class EsriService {
     } catch (error) {
       console.log("Esri: ", error);
     }
-    }*/
-}
+    } */

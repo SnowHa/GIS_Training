@@ -27,18 +27,18 @@ export class BankStoreService extends Store<BankData> {
         super("banks",INITIAL_BANK_DATA);
     }
     public loadBanks() {
-          this.setState('[banks] LOADING',s => ({ ...s , banksLoaded: false }));
-          const banks = new Array<Bank>();
-          this.bankService.getBanks().subscribe((res)=>{
-            for(let b of JSON.parse(res))
-            {
-                banks.push(new Bank(b));
-            }
-            this.setState('[banks] ADD SELECTED',s => ({ ...s , selectedBank: banks[0] }));
-            this.updateState('[banks] LOADED', { banks: banks, banksLoaded: true});
-        });
-      }
-    
+      this.setState('[banks] LOADING',s => ({ ...s , banksLoaded: false }));
+      const banks = new Array<Bank>();
+      this.bankService.getBanks().subscribe((res)=>{
+        for(let b of JSON.parse(res))
+        {
+            banks.push(new Bank(b));
+        }
+        this.setState('[banks] ADD SELECTED',s => ({ ...s , selectedBank: banks[0] }));
+        this.updateState('[banks] LOADED', { banks: banks, banksLoaded: true});
+    });
+  }
+
     public addBank(bank: Bank) {
         let newBanks = [...this.getSnapshot().banks, bank];
         ////this.updateState('[Customers] ADD',{customers: newCustomers})
@@ -70,22 +70,10 @@ export class BankStoreService extends Store<BankData> {
   isLoading(): Observable<boolean> {
     return this.select(state => state.banksLoaded);
   }
-  public DoesBankExist(name:string) :Promise<Boolean>{
-    return new Promise(resolve =>
-      {
-        var sol=false;
-        this.bankService.getBankByName(name).subscribe((res)=>{
-              if(res) {
-              let b =JSON.parse(res);  
-              sol=true;
-          }
-        },
-        error => {
-         console.log("ERROR IN FIND BANK")
-        },
-        ()=> {
-          resolve(sol);
-        });    
-        });
-  }
+  public DoesBankExist(name:string){
+       return this.bankService.getBankByName(name).pipe(map(res=>
+        {
+              return res!=null; 
+        }));
+      }
 }
